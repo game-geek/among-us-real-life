@@ -32,6 +32,10 @@ app.get('/admin', (req, res) => {
 	res.sendFile(path.join(__dirname, 'views', 'admin.html'));
 });
 
+app.get('/ping', (req, res) => {
+	res.sendFile(path.join(__dirname, 'views', 'dummy.html'));
+});
+
 app.use('/', express.static(path.join(__dirname, 'public')));
 
 io.on('connection', socket => {
