@@ -5,14 +5,28 @@ const socket = io({
 });
 
 const emergencyMeeting$ = document.querySelector('#emergency-meeting');
+const emergencyNOTIF$ = document.querySelector('#meeting-status');
 const enableSound$ = document.querySelector('#enable-sound');
 const progress$ = document.querySelector('#progress');
 const progressBar$ = document.querySelector('.progress-bar');
 const report$ = document.querySelector('#report');
 const tasks$ = document.querySelector('#tasks');
+const scan$ = document.querySelector('#scan');
+const video$ = document.querySelector('#video');
+const cancel$ = document.querySelector('#cancel-scan');
+const submitBIO$ = document.querySelector('#env');
+const auth$ = document.querySelector('#auth');
+const main$ = document.querySelector('#main');
+const inp$ = document.querySelector('input');
+const lab$ = document.querySelector('#lab');
+emergencyNOTIF$.style.display = 'none';
+cancel$.style.display = 'none';
+main$.style.display = 'none';
+
 
 report$.addEventListener('click', () => {
 	socket.emit('report');
+	
 });
 
 emergencyMeeting$.addEventListener('click', () => {
@@ -71,6 +85,7 @@ function hideRole() {
 }
 
 socket.on('progress', progress => {
+	console.log('pr', progress)
 	progress$.innerHTML = (progress * 100).toFixed(0);
 	progressBar$.style.width = `${progress * 100}%`;
 });
@@ -97,9 +112,15 @@ const SOUNDS = {
 };
 
 socket.on('play-meeting', async () => {
+	emergencyNOTIF$.style.display = 'block';
 	await playSound(SOUNDS.meeting);
 	await wait(2000);
 	await playSound(SOUNDS.sussyBoy);
+});
+
+socket.on('end-meeting', async () => {
+	emergencyMeeting$.style.display = 'block';
+	emergencyNOTIF$.style.display = 'none';
 });
 
 socket.on('play-win', async () => {
@@ -116,3 +137,289 @@ async function playSound(url) {
 	soundPlayer.src = url;
 	await soundPlayer.play();
 }
+
+scan$.addEventListener('click', async () => {
+	//emergencyNOTIF$.style.display = 'none';
+	video$.style.display = 'block';
+	cancel$.style.display = 'block';
+	console.log('scanning');
+	qrScanner.start();
+});
+
+
+cancel$.addEventListener('click', async () => {
+	video$.style.display = 'none';
+	cancel$.style.display = 'none';
+	qrScanner.stop();
+});
+
+
+const qrScanner = new QrScanner(
+    document.querySelector("video"),
+    result => {
+		console.log(result)
+		console.log("sup")
+		video$.style.display = 'none';
+		cancel$.style.display = 'none';
+		qrScanner.stop();
+		if (IMP) return
+		console.log("sending")
+		socket.emit("update", result.toString())
+	},
+    // No options provided. This will use the old api and is deprecated in the current version until next major version.
+);
+
+
+submitBIO$.addEventListener("submit", (e) => {
+	e.preventDefault()
+	console.log(inp$.value)
+	if (ANIMALS.includes(inp$.value)) {
+		lab$.textContent = ""
+		main$.style.display = 'block';
+		auth$.style.display = 'none';
+		if (IMPS.includes(inp$.value)) {
+			// imposter
+			IMP = true
+		} else {
+			// crew
+			IMP = false
+		}
+	}
+	lab$.textContent = "ID ASTRONAUTE INVALIDE, veuillez réessayer!"
+})
+
+let IMP = false
+const IMPS = [
+    
+]
+
+
+const ANIMALS = [
+    "Soleil",
+    "Etoile",
+    "Mercure",
+    "Venus",
+    "Terre",
+    "Mars",
+    "Ceres",
+    "Jupiter",
+    "Saturne",
+    "Uranus",
+    "Neptune",
+    "Pluto",
+    "Charon",
+    "Cratère",
+    "Cestres",
+    "Constellations",
+    "Zodiac",
+    "Lune",
+    "Boar",
+    "Buffalo",
+    "Butterfly",
+    "Camel",
+    "Capybara",
+    "Caribou",
+    "Cassowary",
+    "Cat",
+    "Caterpillar",
+    "Cattle",
+    "Chamois",
+    "Cheetah",
+    "Chicken",
+    "Chimpanzee",
+    "Chinchilla",
+    "Chough",
+    "Clam",
+    "Cobra",
+    "Cockroach",
+    "Cod",
+    "Cormorant",
+    "Coyote",
+    "Crab",
+    "Crane",
+    "Crocodile",
+    "Crow",
+    "Curlew",
+    "Deer",
+    "Dinosaur",
+    "Dog",
+    "Dogfish",
+    "Dolphin",
+    "Dotterel",
+    "Dove",
+    "Dragonfly",
+    "Duck",
+    "Dugong",
+    "Dunlin",
+    "Eagle",
+    "Echidna",
+    "Eel",
+    "Eland",
+    "Elephant",
+    "Elk",
+    "Emu",
+    "Falcon",
+    "Ferret",
+    "Finch",
+    "Fish",
+    "Flamingo",
+    "Fly",
+    "Fox",
+    "Frog",
+    "Gaur",
+    "Gazelle",
+    "Gerbil",
+    "Giraffe",
+    "Gnat",
+    "Gnu",
+    "Goat",
+    "Goldfinch",
+    "Goldfish",
+    "Goose",
+    "Gorilla",
+    "Goshawk",
+    "Grasshopper",
+    "Grouse",
+    "Guanaco",
+    "Gull",
+    "Hamster",
+    "Hare",
+    "Hawk",
+    "Hedgehog",
+    "Heron",
+    "Herring",
+    "Hippopotamus",
+    "Hornet",
+    "Horse",
+    "Human",
+    "Hummingbird",
+    "Hyena",
+    "Ibex",
+    "Ibis",
+    "Jackal",
+    "Jaguar",
+    "Jay",
+    "Jellyfish",
+    "Kangaroo",
+    "Kingfisher",
+    "Koala",
+    "Kookabura",
+    "Kouprey",
+    "Kudu",
+    "Lapwing",
+    "Lark",
+    "Lemur",
+    "Leopard",
+    "Lion",
+    "Llama",
+    "Lobster",
+    "Locust",
+    "Loris",
+    "Louse",
+    "Lyrebird",
+    "Magpie",
+    "Mallard",
+    "Manatee",
+    "Mandrill",
+    "Mantis",
+    "Marten",
+    "Meerkat",
+    "Mink",
+    "Mole",
+    "Mongoose",
+    "Monkey",
+    "Moose",
+    "Mosquito",
+    "Mouse",
+    "Mule",
+    "Narwhal",
+    "Newt",
+    "Nightingale",
+    "Octopus",
+    "Okapi",
+    "Opossum",
+    "Oryx",
+    "Ostrich",
+    "Otter",
+    "Owl",
+    "Oyster",
+    "Panther",
+    "Parrot",
+    "Partridge",
+    "Peafowl",
+    "Pelican",
+    "Penguin",
+    "Pheasant",
+    "Pig",
+    "Pigeon",
+    "Pony",
+    "Porcupine",
+    "Porpoise",
+    "Quail",
+    "Quelea",
+    "Quetzal",
+    "Rabbit",
+    "Raccoon",
+    "Rail",
+    "Ram",
+    "Rat",
+    "Raven",
+    "Red deer",
+    "Red panda",
+    "Reindeer",
+    "Rhinoceros",
+    "Rook",
+    "Salamander",
+    "Salmon",
+    "Sand Dollar",
+    "Sandpiper",
+    "Sardine",
+    "Scorpion",
+    "Seahorse",
+    "Seal",
+    "Shark",
+    "Sheep",
+    "Shrew",
+    "Skunk",
+    "Snail",
+    "Snake",
+    "Sparrow",
+    "Spider",
+    "Spoonbill",
+    "Squid",
+    "Squirrel",
+    "Starling",
+    "Stingray",
+    "Stinkbug",
+    "Stork",
+    "Swallow",
+    "Swan",
+    "Tapir",
+    "Tarsier",
+    "Termite",
+    "Tiger",
+    "Toad",
+    "Trout",
+    "Turkey",
+    "Turtle",
+    "Viper",
+    "Vulture",
+    "Wallaby",
+    "Walrus",
+    "Wasp",
+    "Weasel",
+    "Whale",
+    "Wildcat",
+    "Wolf",
+    "Wolverine",
+    "Wombat",
+    "Woodcock",
+    "Woodpecker",
+    "Worm",
+    "Wren",
+    "Yak",
+    "Zebra"
+]
+
+
+socket.emit("refresh");

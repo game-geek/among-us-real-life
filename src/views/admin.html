@@ -12,7 +12,26 @@
 		<h1>Admin</h1>
 
 		<button id="start-game">Start Game</button>
+		<div id="meeting-status">
+			REUNION ENCLENCHEE - se rassembler urgemment
+		</div>
+		<button class="end-meeting">Finir la reunion</button>
 
+		
+		<p>Toutes les taches sont complétes à <span id="progress">0</span>%</p>
+		<div class="progress">
+			<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 0%"></div>
+		</div>
+
+		<div>
+			<p>PARAMETRES</p>
+			<input id="TotalTasksValue" type="text" placeholder="Enregistrer le nombre de TASKS TOTAUX">
+			<button id="TotalTasksValueButton">Enregistrer</button>
+			<input id="TotalTasksDoneValue" type="text" placeholder="Enregistrer le nombre de TASKS COMPLETES">
+			<button id="TotalTasksDoneButton">Enregistrer</button>
+		</div>
+
+		
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js" integrity="sha512-eVL5Lb9al9FzgR63gDs1MxcDS2wFu3loYAgjIH0+Hg38tCS8Ag62dwKyH+wzDb+QauDpEZjXbMn11blw8cbTJQ==" crossorigin="anonymous"></script>
 		<script src="/admin.js"></script>
 	</body>

@@ -1,3 +1,16 @@
 h1 {
 	font-family: 'Comic Sans MS';
 }
+
+
+.meeting-status {
+	display: none;
+}
+
+.meeting-status.visible {
+	display: block !important;
+}
+
+input {
+	width: 100vw;
+}

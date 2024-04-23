@@ -15,3 +15,21 @@ img {
 #enable-sound {
 	display: block;
 }
+
+#video {
+	display: none;
+}
+
+#main {
+	display: none;
+}
+
+#meeting-status {
+	width: 100vw;
+	font-size: 20px;
+	background-color: red;
+	color: white;
+	font-weight: bold;
+	text-align: center;
+}
+
